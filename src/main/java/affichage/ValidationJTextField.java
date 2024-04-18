@@ -1,4 +1,4 @@
-package org.example.affichage;
+package affichage;
 
 import javax.swing.*;
 import java.util.function.Function;

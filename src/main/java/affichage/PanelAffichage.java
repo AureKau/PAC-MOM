@@ -1,7 +1,6 @@
-package org.example.affichage;
+package affichage;
 
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
 
 public class PanelAffichage extends JPanel {
