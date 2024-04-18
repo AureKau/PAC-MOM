@@ -1,3 +1,5 @@
+package org.example.affichage;
+
 import javax.swing.*;
 import java.awt.*;
 
