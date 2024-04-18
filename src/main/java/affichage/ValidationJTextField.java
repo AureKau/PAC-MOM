@@ -1,6 +1,7 @@
 package affichage;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.function.Function;
 
 public class ValidationJTextField extends JPanel {
@@ -14,9 +15,15 @@ public class ValidationJTextField extends JPanel {
     }
 
     public ValidationJTextField(String initialValue, String errorMessage, Function<String, Boolean> validationFunction){
-        textField = new JTextField(initialValue);
-        validationLabel = new JLabel(errorMessage);
+        this.textField = new JTextField(initialValue);
+        this.validationLabel = new JLabel(errorMessage);
         this.validationFunction = validationFunction;
+
+        this.validationLabel.setVisible(false);
+
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.add(textField);
+        this.add(validationLabel);
     }
 
     public boolean validateField(){
@@ -37,5 +44,9 @@ public class ValidationJTextField extends JPanel {
 
     public void setValidationFunction(Function<String, Boolean> validationFunction){
         this.validationFunction = validationFunction;
+    }
+
+    public void removeValidation(){
+        this.validationLabel.setVisible(false);
     }
 }
