@@ -1,3 +1,5 @@
+package affichage;
+
 import java.awt.*;
 import javax.swing.*;
 
@@ -6,10 +8,9 @@ public class Toast extends JFrame {
     private String _message;
     private JWindow _window;
 
-    public Toast(String s, int x, int y)
+    public Toast(JWindow window, String s, int x, int y)
     {
-        _window = new JWindow();
-        _window.setBackground(new Color(0, 0, 0, 0));
+        _window = window;
 
         JPanel p = new JPanel() {
             public void paintComponent(Graphics g)
@@ -38,16 +39,16 @@ public class Toast extends JFrame {
             }
         };
 
-        w.add(p);
-        w.setLocation(x, y);
-        w.setSize(300, 100);
+        _window.add(p);
+        _window.setLocation(x, y);
+        _window.setSize(300, 100);
     }
 
     public void showToast()
     {
         try {
-            w.setOpacity(1);
-            w.setVisible(true);
+            _window.setOpacity(1);
+            _window.setVisible(true);
 
             // wait for some time
             Thread.sleep(2000);
@@ -55,11 +56,11 @@ public class Toast extends JFrame {
             // make the message disappear slowly
             for (double d = 1.0; d > 0.2; d -= 0.1) {
                 Thread.sleep(100);
-                w.setOpacity((float)d);
+                _window.setOpacity((float)d);
             }
 
             // set the visibility to false
-            w.setVisible(false);
+            _window.setVisible(false);
         }
         catch (Exception e) {
             System.out.println(e.getMessage());
