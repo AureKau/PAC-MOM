@@ -3,88 +3,87 @@ package affichage;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.function.Function;
 
 public class ValidationJTextField extends JPanel implements FocusListener, DocumentListener {
 
-    private JTextField textField;
-    private JLabel validationLabel;
-    private Function<String, Boolean> validationFunction;
+    private JTextField _textField;
+    private JLabel _validationLabel;
+    private Function<String, Boolean> _validationFunction;
 
-    private boolean isTouched;
-    private boolean isDirty;
-    private boolean isValidating;
+    private boolean _isTouched;
+    private boolean _isDirty;
+    private boolean _isValidating;
 
     public ValidationJTextField() {
         this("","", (String text) -> { return true; });
     }
 
     public ValidationJTextField(String initialValue, String errorMessage, Function<String, Boolean> validationFunction){
-        this.textField = new JTextField(initialValue);
-        this.validationLabel = new JLabel(errorMessage);
-        this.validationFunction = validationFunction;
+        this._textField = new JTextField(initialValue);
+        this._validationLabel = new JLabel(errorMessage);
+        this._validationFunction = validationFunction;
 
-        this.isTouched = false;
-        this.isDirty = false;
-        this.isValidating = false;
+        this._isTouched = false;
+        this._isDirty = false;
+        this._isValidating = false;
 
-        this.textField.addFocusListener(this);
-        this.textField.getDocument().addDocumentListener(this);
+        this._textField.addFocusListener(this);
+        this._textField.getDocument().addDocumentListener(this);
 
-        this.validationLabel.setVisible(false);
+        this._validationLabel.setVisible(false);
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.add(textField);
-        this.add(validationLabel);
+        this.add(_textField);
+        this.add(_validationLabel);
     }
 
     public boolean validateField(){
-        return validationFunction.apply(textField.getText());
+        return _validationFunction.apply(_textField.getText());
     }
 
     public String getText(){
-        return textField.getText();
+        return _textField.getText();
     }
 
     public void setText(String value){
-        textField.setText(value);
+        _textField.setText(value);
     }
 
     public void setValidationLabel(String value){
-        validationLabel.setText(value);
+        _validationLabel.setText(value);
     }
 
-    public void setValidationFunction(Function<String, Boolean> validationFunction){
-        this.validationFunction = validationFunction;
+    public void setValidationFunction(Function<String, Boolean> _validationFunction){
+        this._validationFunction = _validationFunction;
     }
 
     public void removeValidation()
     {
-        this.isValidating = false;
-        this.validationLabel.setVisible(false);
-        this.isDirty = false;
-        this.isTouched = false;
+        this._isValidating = false;
+        this._validationLabel.setVisible(false);
+        this._isDirty = false;
+        this._isTouched = false;
     }
 
     public boolean isDirty(){
-        return this.isDirty;
+        return this._isDirty;
     }
 
     public boolean isTouched(){
-        return this.isTouched;
+        return this._isTouched;
     }
 
     @Override
     public void focusGained(FocusEvent e) {
-        this.isTouched = true;
+        this._isTouched = true;
     }
 
     @Override
     public void focusLost(FocusEvent e) {
-        if(isValidating && validationFunction != null)
+        if(_isValidating && _validationFunction != null)
             validateField();
     }
 
@@ -100,8 +99,8 @@ public class ValidationJTextField extends JPanel implements FocusListener, Docum
 
     @Override
     public void changedUpdate(DocumentEvent e) {
-        this.isDirty = true;
-        if(isValidating)
+        this._isDirty = true;
+        if(_isValidating)
             validateField();
     }
 }
