@@ -5,7 +5,7 @@ import java.awt.*;
 
 
 public class FenetreAffichage extends JFrame {
-
+    // Simple test
     PanelAffichage panAffich = new PanelAffichage();
 
     public static void main(String[] args) {
