@@ -8,7 +8,7 @@ import java.awt.event.FocusListener;
 import java.util.function.Function;
 
 public class ValidationJTextField extends JPanel implements FocusListener, DocumentListener {
-
+//Test
     private JTextField _textField;
     private JLabel _validationLabel;
     private Function<String, Boolean> _validationFunction;
