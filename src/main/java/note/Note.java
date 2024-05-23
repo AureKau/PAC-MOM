@@ -1,11 +1,10 @@
 package note;
 
-import DataBase.src.GestionDB;
 
 import java.sql.Date;
-import java.sql.SQLException;
 
-public class Note {
+
+public class Note implements INote{
 
     private int id_auteur;
     private String auteur;
@@ -16,6 +15,22 @@ public class Note {
     private String texte_note;
     private Date date_note;
     private boolean supprimer_note;
+
+    public Note(boolean supprimer_note, Date date_note, String texte_note, int id_note, String titre_note, String titre_livre, int id_titre, int id_auteur, String auteur) {
+        setSupprimer_note(supprimer_note);
+        setDate_note(date_note);
+        setTexte_note(texte_note);
+        setId_note(id_note);
+        setTitre_note(titre_note);
+        setTitre_livre(titre_livre);
+        setId_titre(id_titre);
+        setId_auteur(id_auteur);
+        setAuteur(auteur);
+    }
+
+    public Note(boolean supprimer_note, Date date_note, String texte_note, String titre_note, String titre_livre, int id_titre, int id_auteur, String auteur) {
+        this(supprimer_note, date_note, texte_note, 0, titre_note, titre_livre, id_titre, id_auteur, auteur);
+    }
 
 
     public int getId_auteur() {
@@ -96,19 +111,7 @@ public class Note {
 
 
 
-    // Méthode pour sauvegarder les variables de la note dans la base de données
-    public void sauvegarderNote() throws SQLException, ClassNotFoundException {
-        GestionDB gestionDB = new GestionDB();
-        // Vérifiez si l'ID de la note est déjà défini
-        if (id_note == 0) {
-            gestionDB.saveNoteWithAll(auteur, titre_livre, titre_note, texte_note);
-        } else {
 
-            gestionDB.executeSqlInsertOrUpdate("UPDATE Note SET titre = '"
-                    + titre_note + "', texte = '"
-                    + texte_note + "' WHERE id_note = " + id_note);
-        }
-    }
 
 
     @Override

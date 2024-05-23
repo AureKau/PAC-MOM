@@ -1,6 +1,7 @@
 package DataBase.src;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
@@ -23,6 +24,7 @@ public class GestionDB {
     }
 
     private static final Logger logger = LoggerFactory.getLogger(GestionDB.class);
+    private Connection connection = null;
 
     public GestionDB() {
         try {
@@ -267,11 +269,27 @@ public class GestionDB {
     }
 
 
+    private void closeExistingConnection() {
+        if (connection != null) {
+            try {
+                if (!connection.isClosed()) {
+                    connection.close();
+                    logger.info("Connexion fermée avec succès.");
+                }
+            } catch (SQLException e) {
+                logger.error("Erreur lors de la fermeture de la connexion.", e);
+            } finally {
+                connection = null;
+            }
+        }
+    }
 
 
     private Connection getConnection() throws SQLException, ClassNotFoundException {
+        closeExistingConnection();
         Class.forName("org.sqlite.JDBC");
-        return DriverManager.getConnection("jdbc:sqlite:" + dbName);
+        connection = DriverManager.getConnection("jdbc:sqlite:" + dbName);
+        return connection;
     }
 
     private Statement getStatement() throws SQLException, ClassNotFoundException {
@@ -286,15 +304,22 @@ public class GestionDB {
         conn.close();
     }
 
+    public boolean databaseExists() {
+        File dbFile = new File(dbName);
+        return dbFile.exists();
+    }
 
 
 
     public void createDataBase() throws ClassNotFoundException, SQLException, IOException {
-        Class.forName("org.sqlite.JDBC");
-        Connection connection = getConnection();
-        String script = readSQLScript(pathFileScripSqlite);
-        executeScript(connection, script);
-        connection.close();
+        if (!databaseExists()){
+            Class.forName("org.sqlite.JDBC");
+            Connection connection = getConnection();
+            String script = readSQLScript(pathFileScripSqlite);
+            executeScript(connection, script);
+            connection.close();
+        }
+
     }
 
 
@@ -321,8 +346,10 @@ public class GestionDB {
                 }
             }
             statement.executeBatch();
+
         }
     }
+
 
     private String recupNameTableAndColumn() throws ClassNotFoundException, SQLException {
         logger.info("récuperation de tous les nom des tables et des colones");
