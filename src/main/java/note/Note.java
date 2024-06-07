@@ -3,8 +3,7 @@ package note;
 
 import java.sql.Date;
 
-
-public class Note implements INote{
+public class Note implements INote {
 
     private int id_auteur;
     private String auteur;
