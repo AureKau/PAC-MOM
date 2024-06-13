@@ -2,7 +2,7 @@ package DataBase.src;
 
 public class MainTestRunner {
 
-    public static GestionDB g1 = new GestionDB();
+    public static GestionDB g1 = GestionDB.getInstance();
     public static void main(String[] args) {
         testCreateDatabase();
         testExecuteSqlInsertOrUpdate();

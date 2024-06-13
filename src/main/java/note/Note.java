@@ -3,8 +3,7 @@ package note;
 
 import java.sql.Date;
 
-
-public class Note implements INote{
+public class Note implements INote {
 
     private int id_auteur;
     private String auteur;
@@ -28,9 +27,25 @@ public class Note implements INote{
         setAuteur(auteur);
     }
 
+    public Note(boolean supprimer_note, Date date_note, String texte_note, int id_note, String titre_note) {
+        setSupprimer_note(supprimer_note);
+        setDate_note(date_note);
+        setTexte_note(texte_note);
+        setId_note(id_note);
+        setTitre_note(titre_note);
+    }
+
+    public Note(String texte_note, String titre_note) {
+        setTexte_note(texte_note);
+        setTitre_note(titre_note);
+        setId_note(0);
+        setSupprimer_note(false);
+    }
+
     public Note(boolean supprimer_note, Date date_note, String texte_note, String titre_note, String titre_livre, int id_titre, int id_auteur, String auteur) {
         this(supprimer_note, date_note, texte_note, 0, titre_note, titre_livre, id_titre, id_auteur, auteur);
     }
+
 
 
     public int getId_auteur() {

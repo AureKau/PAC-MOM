@@ -26,13 +26,23 @@ public class GestionDB {
     private static final Logger logger = LoggerFactory.getLogger(GestionDB.class);
     private Connection connection = null;
 
-    public GestionDB() {
+    static GestionDB instance;
+
+    private GestionDB() {
         try {
             createDataBase();
         } catch (ClassNotFoundException | SQLException | IOException e) {
             logger.error("probleme lors de la création de la db");
             throw new RuntimeException(e);
         }
+    }
+
+    public static GestionDB getInstance(){
+        if (instance == null){
+            instance = new GestionDB();
+        }
+
+        return instance;
     }
 
     private ResultSet executeSqlCommand(String sqlCommand) throws SQLException, ClassNotFoundException {
@@ -317,6 +327,7 @@ public class GestionDB {
             Connection connection = getConnection();
             String script = readSQLScript(pathFileScripSqlite);
             executeScript(connection, script);
+            logger.info("création de la base de données");
             connection.close();
         }
 
