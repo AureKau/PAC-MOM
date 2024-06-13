@@ -239,6 +239,7 @@ public class GestionNote {
     }
 
     public void saveMotCle(String motCle) throws SQLException, ClassNotFoundException {
+        if (gestionDB.executeSqlSelect("mot_cle","historique", "mot_cle = \"" + motCle + "\"").getFetchSize()<=0) return;
         gestionDB.executeSqlInsertOrUpdate("INSERT INTO historique(mot_cle) VALUES(\"" + motCle + "\");");
     }
 }

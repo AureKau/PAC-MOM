@@ -62,11 +62,11 @@ public class GestionDB {
     }
 
     public ResultSet executeSqlSelect(String champs, String table) throws SQLException, ClassNotFoundException {
-        return executeSqlCommand("SELECT" + champs + " FROM " + table + ";");
+        return executeSqlCommand("SELECT " + champs + " FROM " + table + ";");
     }
 
     public ResultSet executeSqlSelect(String champs, String table, String whereCondition) throws SQLException, ClassNotFoundException {
-        return executeSqlCommand("SELECT" + champs + " FROM " + table + "WHERE " + whereCondition + ";");
+        return executeSqlCommand("SELECT " + champs + " FROM " + table + " WHERE " + whereCondition + ";");
     }
 
     public ResultSet executeSqlSelect(String sqlCommand) throws SQLException, ClassNotFoundException {
