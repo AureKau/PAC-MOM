@@ -8,22 +8,58 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
+
 
 public class GestionNote {
     public final GestionDB gestionDB = GestionDB.getInstance();
 
     public INote creationNote(String texte_note, String titre_note){
-        System.out.println(gestionDB);
         return new Note(texte_note, titre_note);
 
     }
 
     public INote getNoteFromDb(String titre_note) throws SQLException, ClassNotFoundException {
-        ResultSet set = gestionDB.executeSqlSelect("SELECT * from note where titre = \"" + titre_note + "\";");
-        return new Note(set.getBoolean("supprimee"), set.getDate("date_creation"),
-                set.getString("texte"), set.getInt("id_Note"), set.getString("titre"));
+        ResultSet resultSet = gestionDB.executeSqlSelect("SELECT * from note LEFT JOIN Livre USING(id_livre) LEFT JOIN auteur USING(id_auteur) where note.titre = \"" + titre_note + "\";");
+        if (resultSet.next()) {
+            // Récupération des données de la base de données pour chaque note
+            int idAuteur = resultSet.getInt("id_auteur");
+            String auteur = resultSet.getString("nom_auteur");
+            int idTitre = resultSet.getInt("id_livre");
+            String titreLivre = resultSet.getString("titre");
+            int idNote = resultSet.getInt("id_note");
+            String titreNote = resultSet.getString("titre");
+            String texteNote = resultSet.getString("texte");
+            Date dateNote = resultSet.getDate("date_creation");
+            boolean supprimerNote = resultSet.getBoolean("supprimee");
 
+            // Création de l'objet Note correspondant et ajout à la liste
+            Note note = new Note(supprimerNote, dateNote, texteNote, idNote, titreNote, titreLivre, idTitre, idAuteur, auteur);
+            return note;
+        }
+        return null;
+    }
+
+    public INote getNoteFromDb(int id_note) throws SQLException, ClassNotFoundException {
+        ResultSet resultSet = gestionDB.executeSqlSelect("SELECT * from note LEFT JOIN Livre USING(id_livre) LEFT JOIN auteur USING(id_auteur) where id_note = " + id_note + ";");
+        if (resultSet.next()) {
+            // Récupération des données de la base de données pour chaque note
+            int idAuteur = resultSet.getInt("id_auteur");
+            String auteur = resultSet.getString("nom_auteur");
+            int idTitre = resultSet.getInt("id_livre");
+            String titreLivre = resultSet.getString("titre");
+            int idNote = resultSet.getInt("id_note");
+            String titreNote = resultSet.getString("titre");
+            String texteNote = resultSet.getString("texte");
+            Date dateNote = resultSet.getDate("date_creation");
+            boolean supprimerNote = resultSet.getBoolean("supprimee");
+
+            // Création de l'objet Note correspondant et ajout à la liste
+            Note note = new Note(supprimerNote, dateNote, texteNote, idNote, titreNote, titreLivre, idTitre, idAuteur, auteur);
+            return note;
+        }
+        return null;
     }
 
     // Méthode pour sauvegarder les variables de la note dans la base de données
@@ -42,15 +78,16 @@ public class GestionNote {
 
         } else {
 
-            gestionDB.executeSqlInsertOrUpdate("UPDATE Note SET titre = '"
-                    + note.getTitre_note() + "', texte = '"
-                    + note.getTexte_note() + "' WHERE id_note = " + note.getId_note());
+            updateNote(note);
         }
     }
 
     public void updateNote(INote note) throws NoteException, SQLException, ClassNotFoundException {
-        if (note.getTexte_note() == null || note.getTexte_note() == null) throw new NoteException();
-        String command = "UPDATE note SET titre = \"" + note.getTitre_note() + "\", texte = \"" + note.getTexte_note() + "\"";
+        if (note.getTexte_note() == null || note.getTexte_note() == null) throw new NoteException("le titre de la note ou le texte de la note est null");
+        String command = "UPDATE note SET texte = \"" + note.getTexte_note() + "\"";
+        if (!Objects.equals(getNoteFromDb(note.getId_note()).getTitre_note(), note.getTitre_note())){
+            command += ", titre = \"" + note.getTitre_note() + "\"";
+        }
         command += ", supprimee = " + note.isSupprimer_note();
         command += " WHERE id_note = " + note.getId_note() + ";";
         gestionDB.executeSqlInsertOrUpdate(command);
@@ -101,7 +138,7 @@ public class GestionNote {
             int idAuteur = resultSet.getInt("id_auteur");
             String auteur = resultSet.getString("nom_auteur");
             int idTitre = resultSet.getInt("id_livre");
-            String titreLivre = resultSet.getString("titre");
+            String titreLivre = resultSet.getString(8);
             int idNote = resultSet.getInt("id_note");
             String titreNote = resultSet.getString("titre");
             String texteNote = resultSet.getString("texte");
@@ -154,7 +191,7 @@ public class GestionNote {
     public Set<INote> rechercheDansDB(String motCle) throws SQLException, ClassNotFoundException {
         Set<INote> notes = new HashSet<>();
         String command = "SELECT * FROM note LEFT JOIN Livre USING(id_livre) LEFT JOIN auteur USING (id_auteur) WHERE texte LIKE \"%" + motCle + "%\"" +
-                           "OR note.titre LIKE \"%" + motCle + "%\" OR livre.titre LIKE \"%" + motCle + "%\" OR nom_auteur LIKE \"%" + motCle + "%\";";
+                "OR note.titre LIKE \"%" + motCle + "%\" OR livre.titre LIKE \"%" + motCle + "%\" OR nom_auteur LIKE \"%" + motCle + "%\";";
         ResultSet resultSet = gestionDB.executeSqlSelect(command);
         while (resultSet.next()) {
             // Récupération des données de la base de données pour chaque note
