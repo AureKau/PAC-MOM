@@ -17,6 +17,7 @@ package Recherche;
     - Sauvegarde de l'historique ( Illias ? )
 
 
+
     /----
 
     Quand on tape des lettres on affiche les notes correspondante dans la db
