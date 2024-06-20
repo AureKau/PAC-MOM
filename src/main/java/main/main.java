@@ -1,11 +1,12 @@
 package main;
 
 
-import affichage.FenetreAffichage;
+import affichage.MainFrame;
 
 public class main {
     public static void main(String[] args) {
-
-        new FenetreAffichage();
+        new MainFrame();
+//        new DetailFrame();
+//        new ResumeFrame();
     }
 }
