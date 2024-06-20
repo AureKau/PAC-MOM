@@ -1,7 +1,12 @@
 package affichage;
 
 import DataBase.src.NoteRepository;
+import affichage.ilias.OverlayForCreateNoteListener;
+import affichage.ilias.OverlayFroCreateNote;
+import note.GestionNote;
+import note.INote;
 import note.Note;
+import note.NoteException;
 import utils.ImageUtils;
 
 import javax.swing.*;
@@ -15,7 +20,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 
-public class MainFrame extends JFrame implements ActionListener {
+public class MainFrame extends JFrame implements ActionListener, OverlayForCreateNoteListener {
+
+    private GestionNote gestionNote = new GestionNote();
 
     private ImageUtils imgUtils = new ImageUtils();
     private NoteRepository noteRepository = new NoteRepository();
@@ -136,8 +143,20 @@ public class MainFrame extends JFrame implements ActionListener {
         switch (actionCommand) {
             case "delete":
                 PopupDelete popupDelete = new PopupDelete(() -> {
-                    for(Integer i: selectedNoteIds)
+                    for(Integer i: selectedNoteIds) {
                         noteRepository.delete(i);
+                        try {
+                            INote note = gestionNote.getNoteFromDb(i);
+                            if (note != null){
+                                gestionNote.supprimerNoteDansDB(note);
+                            }
+
+                        } catch (SQLException ex) {
+                            throw new RuntimeException(ex);
+                        } catch (ClassNotFoundException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }
                     try {
                         refreshList(noteRepository.getAll());
                     } catch (SQLException ex) {
@@ -149,7 +168,8 @@ public class MainFrame extends JFrame implements ActionListener {
                 popupDelete.showPopUp();
                 break;
             case "add":
-                    // new window add
+                OverlayFroCreateNote overlayFroCreateNote = new OverlayFroCreateNote(gestionNote.creationNote("texte", "titre"), this, this);
+                overlayFroCreateNote.addOverlayForCreateNoteListener(this);
                 break;
             case "search":
                 try {
@@ -162,6 +182,33 @@ public class MainFrame extends JFrame implements ActionListener {
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + actionCommand);
+        }
+    }
+
+    @Override
+    public void btnRetour() {
+
+    }
+
+    @Override
+    public void btnValidate(INote note) {
+        try {
+            gestionNote.sauvegarderNote(note);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (NoteException e) {
+            throw new RuntimeException(e);
+        }
+
+        noteRepository.add((Note) note);
+        try {
+            refreshList(noteRepository.search(searchText.getText()));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 }

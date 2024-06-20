@@ -1,5 +1,7 @@
 package DataBase.src;
 
+import note.GestionNote;
+import note.INote;
 import note.Note;
 import java.sql.*;
 
@@ -10,6 +12,8 @@ import java.util.ArrayList;
 public class NoteRepository {
 
     private static final GestionDB db = GestionDB.getInstance();
+
+    private GestionNote gestionNote = new GestionNote();
 
     private static ArrayList<Note> notes = new ArrayList<>();
 
@@ -33,6 +37,10 @@ public class NoteRepository {
 //            result.add(fromResultSetToNote(dbResult));
 //        }
 //        return result;
+
+        for (INote notes: gestionNote.recupAllNote()){
+            add((Note) notes);
+        }
         return notes;
     }
 

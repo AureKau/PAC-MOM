@@ -3,8 +3,11 @@ package affichage;
 import note.Note;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Objects;
 
-public class DetailFrame extends JFrame {
+public class DetailFrame extends JFrame implements ActionListener {
 
     private DetailPanel detailPanel = new DetailPanel();
 
@@ -13,6 +16,7 @@ public class DetailFrame extends JFrame {
     }
 
     public DetailFrame(Note note) {
+        this.detailPanel = new DetailPanel(note);
         initComponent();
     }
 
@@ -23,5 +27,14 @@ public class DetailFrame extends JFrame {
         setResizable(false);
         setTitle("Note");
         setVisible(true);
+        this.detailPanel.backButton.addActionListener(this);
+        this.detailPanel.backButton.setActionCommand("back");
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (Objects.equals(e.getActionCommand(), "back")){
+            dispose();
+        }
     }
 }

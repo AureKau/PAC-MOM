@@ -7,10 +7,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class ResumePanel extends JPanel implements ActionListener {
+public class ResumePanel extends JPanel implements ActionListener, MouseListener {
 
 
     private ImageUtils imgUtils = new ImageUtils();
@@ -100,6 +102,7 @@ public class ResumePanel extends JPanel implements ActionListener {
         }
 
         add(contentPane);
+        addMouseListener(this);
     }
 
     private JButton createIconButton(ImageIcon imgIcon, int width, int height) {
@@ -143,6 +146,31 @@ public class ResumePanel extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        new DetailFrame(note);
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
 
     }
 }

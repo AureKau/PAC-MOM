@@ -1,6 +1,7 @@
 package main;
 
 
+import affichage.DetailFrame;
 import affichage.MainFrame;
 
 public class main {

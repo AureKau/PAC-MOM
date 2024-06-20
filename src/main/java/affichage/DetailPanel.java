@@ -5,6 +5,8 @@ import utils.ImageUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class DetailPanel extends JPanel {
 
@@ -89,4 +91,6 @@ public class DetailPanel extends JPanel {
             paragraphe.setText(note.getTexte_note());
         }
     }
+
+
 }
